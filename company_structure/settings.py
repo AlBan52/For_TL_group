@@ -2,17 +2,22 @@
 Django settings for company_structure project.
 
 """
+import os
 
+from environs import Env
 from pathlib import Path
 
+env = Env()
+env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'django-insecure-e$o#@v!7b32=d07rz1)-w544^i+x+xpwim1n#itu$2e+p#7=5='
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = True
+DEBUG = env.bool("DEBUG", False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,7 +44,7 @@ ROOT_URLCONF = 'company_structure.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -56,9 +61,13 @@ WSGI_APPLICATION = 'company_structure.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": os.getenv("DATABASES_ENGINE"),
+        "HOST": os.getenv("DATABASES_HOST"),
+        "PORT": os.getenv("DATABASES_PORT"),
+        "NAME": os.getenv("DATABASES_NAME"),
+        "USER": os.getenv("DATABASES_USER"),
+        "PASSWORD": os.getenv("DATABASES_PASSWORD"),
     }
 }
 
